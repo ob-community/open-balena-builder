@@ -229,8 +229,8 @@ async function createHttpServer(listenPort: number) {
     let headlessReturned = false;
 
     try {
-      const { slug, dockerfilePath, nocache, headless, isdraft } = req.query;
-      let { emulated } = req.query;
+      const { slug, dockerfilePath, nocache, headless, isdraft, emulated } =
+        req.query;
       const token = req.headers.authorization?.split(' ')?.[1];
 
       log(
