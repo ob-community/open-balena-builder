@@ -8,15 +8,20 @@ RUN apt-get update && apt-get install -y \
     jq \
     docker-compose \
     curl \
-    unzip \
+    tar \
+    gzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install balena-cli
-ARG BALENA_CLI_VERSION=21.1.9
-RUN curl -sSL https://github.com/balena-io/balena-cli/releases/download/v$BALENA_CLI_VERSION/balena-cli-v$BALENA_CLI_VERSION-linux-x64-standalone.zip > balena-cli.zip && \
-  unzip balena-cli.zip && \
-  mv balena-cli/* /usr/local/bin && \
-  rm -rf balena-cli.zip balena-cli
+ARG BALENA_CLI_VERSION=22.5.5
+ENV BALENA_CLI_DIR=/usr/local/balena-cli
+ENV PATH="${BALENA_CLI_DIR}/balena/bin:${PATH}"
+
+RUN curl -fsSL \
+    "https://github.com/balena-io/balena-cli/releases/download/v${BALENA_CLI_VERSION}/balena-cli-v${BALENA_CLI_VERSION}-linux-x64-standalone.tar.gz" \
+    -o balena-cli.tar.gz && \
+  mkdir -p "${BALENA_CLI_DIR}" && \
+  tar -xzf balena-cli.tar.gz -C "${BALENA_CLI_DIR}" && \
+  rm balena-cli.tar.gz
 
 WORKDIR /usr/src/app
 
