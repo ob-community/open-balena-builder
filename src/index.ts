@@ -102,6 +102,11 @@ const exec = async (
 
   // set up execution environment
   const env = {
+    ...process.env,
+    HOME: process.env.HOME || '/root',
+    PATH:
+      process.env.PATH ||
+      '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     BALENARC_BALENA_URL: balenaTld,
     BALENARC_DATA_DIRECTORY: cwd,
     DOCKER_CONFIG: `${cwd}/.docker`,
@@ -256,7 +261,7 @@ async function createHttpServer(listenPort: number) {
       await once(req, 'end');
 
       // Authenticate with openbalena
-      await exec(['/usr/local/bin/balena', 'login', '-t', token], workdir);
+      await exec(['/usr/local/balena-cli/balena/bin/balena', 'login', '-t', token], workdir);
 
       // Get application architecture
       const arch = await getArch(String(slug), token);
@@ -294,7 +299,7 @@ async function createHttpServer(listenPort: number) {
       // Build image, deploy as draft release, and return stream
       const { spawnStream } = await exec(
         [
-          '/usr/local/bin/balena',
+          '/usr/local/balena-cli/balena/bin/balena',
           'deploy',
           String(slug),
           '--build',
@@ -428,7 +433,7 @@ async function createHttpServer(listenPort: number) {
         log('Finalizing release');
 
         const finalizeRelease = exec(
-          ['/usr/local/bin/balena', 'release', 'finalize', newCommit],
+          ['/usr/local/balena-cli/balena/bin/balena', 'release', 'finalize', newCommit],
           workdir,
           envAdd,
           false
