@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
 ARG BALENA_CLI_VERSION=22.5.5
 ENV BALENA_CLI_DIR=/usr/local/balena-cli
 ENV PATH="${BALENA_CLI_DIR}/balena/bin:${PATH}"
+ENV BALENARC_UNSUPPORTED=1
 
 RUN curl -fsSL \
     "https://github.com/balena-io/balena-cli/releases/download/v${BALENA_CLI_VERSION}/balena-cli-v${BALENA_CLI_VERSION}-linux-x64-standalone.tar.gz" \
